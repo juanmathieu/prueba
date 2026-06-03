@@ -17,7 +17,7 @@ client = Anthropic()
 
 CATS = [
     'Ambiente','Ciudad Inteligente','Deporte y Cultura','Desarrollo Urbano',
-    'Educación','Entrevista','General','Gobierno','Mensaje de oyente',
+    'Educación','Entrevista','General','Gobierno',
     'Participación','Políticas Sociales','Recursos Tributarios',
     'Salud','Seguridad','Transporte','Tránsito','Tribunal de Faltas'
 ]
@@ -163,60 +163,153 @@ KW_DATA = [
 ]
 
 PHRASE_RULES = [
-    # GOBIERNO
-    (["alerta","sofía"],            "Gobierno",             12),
-    (["alerta","sofia"],            "Gobierno",             12),
-    (["empleado","municipal"],      "Gobierno",             10),
-    (["becario","municipal"],       "Gobierno",             9),
-    (["pasante","municipal"],       "Gobierno",             9),
-    (["estacionamiento","controlado"], "Gobierno",          10),
-    (["estacionamiento","medido"],  "Gobierno",             10),
-    (["semm"],                      "Gobierno",             9),
-    (["naranjitas"],                "Gobierno",             8),
-    (["tránsito","informe"],        "Gobierno",             9),
-    (["transito","informe"],        "Gobierno",             9),
-    (["niebla"],                    "Gobierno",             7),
-    (["túnel"],                     "Gobierno",             7),
-    (["desaparición","municipal"],  "Gobierno",             12),
-    (["búsqueda","agostina"],       "Gobierno",             10),
-    # SEGURIDAD
-    (["desaparición"],              "Seguridad",            4),
-    (["desaparecida"],              "Seguridad",            4),
-    (["imputado"],                  "Seguridad",            6),
-    (["detenido","antecedentes"],   "Seguridad",            8),
-    # TRÁNSITO
-    (["atropello"],                 "Tránsito",             9),
-    (["accidente","vial"],          "Tránsito",             9),
-    (["choque"],                    "Tránsito",             8),
-    (["accidentología"],            "Tránsito",             9),
+    # GOBIERNO — tránsito y accidentes
+    (["transitoinforme"],                 "Gobierno",            12),
+    (["tránsito","informe"],              "Gobierno",            12),
+    (["transito","informe"],              "Gobierno",            12),
+    (["accidentetransito"],               "Gobierno",            11),
+    (["accidentologiavial"],              "Gobierno",            11),
+    (["accidente","tránsito"],            "Gobierno",            10),
+    (["accidente","transito"],            "Gobierno",            10),
+    (["atropello"],                       "Gobierno",            10),
+    (["choque"],                          "Gobierno",             8),
+    (["seguridadvial"],                   "Gobierno",            11),
+    # GOBIERNO — transporte público
+    (["tupcolectivos"],                   "Gobierno",            12),
+    (["colectivos","frecuencia"],         "Gobierno",            11),
+    (["colectivos","recorrido"],          "Gobierno",            11),
+    (["transporteurbanopasajeros"],       "Gobierno",            12),
+    (["famempresa"],                      "Gobierno",            11),
+    (["transporteaplicaciones"],          "Gobierno",            11),
+    # GOBIERNO — estacionamiento
+    (["estacionamientocontrolado"],       "Gobierno",            12),
+    (["estacionamiento","controlado"],    "Gobierno",            12),
+    (["estacionamiento","medido"],        "Gobierno",            12),
+    (["semmsistemadeestacionamiento"],    "Gobierno",            12),
+    (["semm"],                            "Gobierno",            10),
+    (["estacionamiento"],                 "Gobierno",             7),
+    # GOBIERNO — naranjitas / limpiavidrios
+    (["naranjitasilegales"],              "Gobierno",            12),
+    (["naranjitas"],                      "Gobierno",            10),
+    (["limpiavidrios"],                   "Gobierno",            10),
+    # GOBIERNO — policiales y seguridad (todo va a Gobierno)
+    (["policialdesaparicion"],            "Gobierno",            12),
+    (["policialrobo"],                    "Gobierno",            12),
+    (["policialdetencion"],               "Gobierno",            11),
+    (["policialagresion"],                "Gobierno",            11),
+    (["policiallesionesgraves"],          "Gobierno",            11),
+    (["inseguridadrobo"],                 "Gobierno",            12),
+    (["inseguridadlesionesgraves"],       "Gobierno",            11),
+    (["desaparición"],                    "Gobierno",             8),
+    (["alerta","sofía"],                  "Gobierno",            12),
+    (["alerta","sofia"],                  "Gobierno",            12),
+    (["empleado","municipal"],            "Gobierno",            10),
+    # GOBIERNO — taxis / apps
+    (["uberregulacion"],                  "Gobierno",            12),
+    (["taxistasreclamo"],                 "Gobierno",            12),
+    (["taxisremis"],                      "Gobierno",            11),
+    (["uber"],                            "Gobierno",             8),
+    # GOBIERNO — otros
+    (["guardiaurbana"],                   "Gobierno",            11),
+    (["ruidosmolesto"],                   "Gobierno",            10),
+    (["caminera","multa"],                "Gobierno",            10),
+    (["carnetconducir"],                  "Gobierno",            11),
     # AMBIENTE
-    (["urbacor"],                   "Ambiente",             10),
-    (["surbac"],                    "Ambiente",             10),
-    (["residuos","voluminosos"],    "Ambiente",             10),
-    (["residuos","recolección"],    "Ambiente",             9),
-    (["basura","recolección"],      "Ambiente",             9),
-    (["pasto","yuyos"],             "Ambiente",             8),
-    (["incendio","basural"],        "Ambiente",             10),
-    # RECURSOS TRIBUTARIOS
-    (["tasas","municipales"],       "Recursos Tributarios", 10),
-    (["cargos","ocultos"],          "Recursos Tributarios", 10),
-    (["facturas","cargos"],         "Recursos Tributarios", 9),
-    # SALUD
-    (["dengue","mosquito"],         "Salud",                9),
-    (["vacunación","campaña"],      "Salud",                9),
-    (["guardia","hospital"],        "Salud",                8),
+    (["higieneurbanareclamo"],            "Ambiente",            12),
+    (["higieneurbanatareas"],             "Ambiente",            12),
+    (["basuralreclamo"],                  "Ambiente",            12),
+    (["recicladoderesiduos"],             "Ambiente",            12),
+    (["espaciosverdesreclamo"],           "Ambiente",            12),
+    (["carrerosreclamo"],                 "Ambiente",            12),
+    (["urbacor"],                         "Ambiente",            12),
+    (["surbac"],                          "Ambiente",            11),
+    (["basural"],                         "Ambiente",            11),
+    (["basura"],                          "Ambiente",             8),
+    (["residuos"],                        "Ambiente",             7),
+    (["mugre"],                           "Ambiente",             8),
+    (["recolección","residuos"],          "Ambiente",            10),
+    (["higiene","urbana"],                "Ambiente",             9),
+    (["poda"],                            "Ambiente",             8),
+    (["descacharreo"],                    "Ambiente",            10),
     # DESARROLLO URBANO
-    (["hundimiento","calle"],       "Desarrollo Urbano",    9),
-    (["obras","viales"],            "Desarrollo Urbano",    8),
+    (["bachereclamomc"],                  "Desarrollo Urbano",   12),
+    (["alumbradopublicoreclamo"],         "Desarrollo Urbano",   12),
+    (["pavimentoreclamo"],                "Desarrollo Urbano",   12),
+    (["semaforosreclamo"],                "Desarrollo Urbano",   11),
+    (["aguascordobesascanoroto"],         "Desarrollo Urbano",   12),
+    (["aguascordobesasreclamo"],          "Desarrollo Urbano",   11),
+    (["callesreclamo"],                   "Desarrollo Urbano",   11),
+    (["obrasvialesreclamo"],              "Desarrollo Urbano",   12),
+    (["veredasreclamo"],                  "Desarrollo Urbano",   12),
+    (["desaguesreclamo"],                 "Desarrollo Urbano",   12),
+    (["callehundimiento"],                "Desarrollo Urbano",   12),
+    (["obraspublicas"],                   "Desarrollo Urbano",   11),
+    (["obrapublica"],                     "Desarrollo Urbano",   11),
+    (["bache"],                           "Desarrollo Urbano",   10),
+    (["alumbrado"],                       "Desarrollo Urbano",    9),
+    (["pavimento"],                       "Desarrollo Urbano",    9),
+    (["semáforo"],                        "Desarrollo Urbano",    8),
+    (["semaforo"],                        "Desarrollo Urbano",    8),
+    (["caño","roto"],                     "Desarrollo Urbano",   10),
+    (["cloacas"],                         "Desarrollo Urbano",    9),
+    (["hundimiento","calle"],             "Desarrollo Urbano",   10),
+    # GENERAL
+    (["llaryora"],                        "General",              9),
+    (["llaryoragestion"],                 "General",             12),
+    (["danielpasserini"],                 "General",             11),
+    (["suoem"],                           "General",             10),
+    (["suoemsindicato"],                  "General",             12),
+    (["milei"],                           "General",              9),
+    (["concejodeliberante"],              "General",             11),
+    (["concejo"],                         "General",              7),
+    (["eleccionintendente"],              "General",             12),
+    (["intendentes"],                     "General",              8),
+    (["gobernador"],                      "General",              7),
+    # SALUD
+    (["campanavacunacion"],               "Salud",               12),
+    (["vacunación","campaña"],            "Salud",               11),
+    (["dispensario"],                     "Salud",               11),
+    (["vacunas"],                         "Salud",               10),
+    (["salud","mental"],                  "Salud",               11),
+    (["dengue","muertos"],                "Salud",               10),
+    (["dengue","casos"],                  "Salud",                9),
+    # POLÍTICAS SOCIALES
+    (["personassituaciondecalle"],        "Políticas Sociales",  12),
+    (["comedoresreclamo"],                "Políticas Sociales",  12),
+    (["personas","situación","calle"],    "Políticas Sociales",  11),
+    (["comedor"],                         "Políticas Sociales",   9),
     # EDUCACIÓN
-    (["docentes","paro"],           "Educación",            9),
-    (["clases","escuela"],          "Educación",            8),
+    (["transporteescolar"],               "Educación",           12),
+    (["transporte","escolar"],            "Educación",           11),
+    (["docentes","paro"],                 "Educación",           11),
+    # PARTICIPACIÓN
+    (["nochedeloscpc"],                   "Participación",       12),
+    (["cpcdescentralizacion"],            "Participación",       12),
+    (["horario","extendido"],             "Participación",       10),
     # DEPORTE Y CULTURA
-    (["noche","lecturas"],          "Deporte y Cultura",    10),
-    (["gardel","premios"],          "Deporte y Cultura",    9),
+    (["teatrocomedia"],                   "Deporte y Cultura",   12),
+    (["nochedelaslecturas"],              "Deporte y Cultura",   12),
+    (["noche","lecturas"],                "Deporte y Cultura",   11),
+    (["teatro"],                          "Deporte y Cultura",    8),
+    (["cultura"],                         "Deporte y Cultura",    8),
+    (["musica"],                          "Deporte y Cultura",    9),
+    (["gardel","premios"],                "Deporte y Cultura",   11),
+    # RECURSOS TRIBUTARIOS
+    (["inmuebles","alquiler"],            "Recursos Tributarios",11),
+    (["vacíos","inmuebles"],              "Recursos Tributarios",12),
+    (["tasas","municipales"],             "Recursos Tributarios",11),
+    (["cargos","ocultos"],                "Recursos Tributarios",12),
+    (["tasas"],                           "Recursos Tributarios", 7),
     # TRIBUNAL DE FALTAS
-    (["juicio","audiencia"],        "Tribunal de Faltas",   9),
-    (["tribunal","faltas"],         "Tribunal de Faltas",   10),
+    (["juicio","audiencia"],              "Tribunal de Faltas",  11),
+    (["tribunal","faltas"],               "Tribunal de Faltas",  12),
+    # CIUDAD INTELIGENTE
+    (["appdenuncias"],                    "Ciudad Inteligente",  12),
+    (["vedi"],                            "Ciudad Inteligente",  10),
+    (["midocta"],                         "Ciudad Inteligente",  12),
+    (["govtech"],                         "Ciudad Inteligente",  12),
+    (["smartcity"],                       "Ciudad Inteligente",  12),
+    (["app","trámites"],                  "Ciudad Inteligente",  10),
 ]
 MEDIA_MAP = {k.lower(): {'display': d, 'tipo': t} for k, d, t in [
     ("Radio Mitre", "Mitre", "Medio"),
@@ -577,21 +670,49 @@ SESSIONS = {}
 
 async def cmd_start(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     uid = update.effective_user.id
-    if uid in SESSIONS:
-        s = SESSIONS[uid]
+    SESSIONS.pop(uid, None)
+    await update.message.reply_text(
+        "\U0001f44b *Clipping de Medios \u2014 Municipalidad de C\u00f3rdoba*\n\n"
+        "Envi\u00e1 el archivo `.txt` exportado de WhatsApp para comenzar.\n\n"
+        "\U0001f4f2 *C\u00f3mo exportarlo:*\n"
+        "WhatsApp \u2192 chat del bot \u2192 \u00b7\u00b7\u00b7 \u2192 M\u00e1s \u2192 *Exportar chat* \u2192 Sin archivos\n\n"
+        "_Si ya ten\u00e9s un archivo cargado, us\u00e1 /menu para volver a las categor\u00edas._",
+        parse_mode='Markdown'
+    )
+
+
+async def cmd_menu(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    uid = update.effective_user.id
+    if uid not in SESSIONS:
         await update.message.reply_text(
-            menu_text(len(s['items']), len(s['active_cats'])),
-            reply_markup=menu_keyboard(s['items'], s['active_cats']),
+            "No hay sesi\u00f3n activa. " "\u00bfYa enviaste el `.txt`? Si no, us\u00e1 /start.",
             parse_mode='Markdown'
         )
         return
+    s = SESSIONS[uid]
     await update.message.reply_text(
-        "\U0001f44b *Clipping de Medios \u2014 Municipalidad de C\u00f3rdoba*\n\n"
-        "Enviam\u00e9 el archivo `.txt` exportado de WhatsApp.\n\n"
-        "\U0001f4f2 *C\u00f3mo exportarlo:*\n"
-        "WhatsApp \u2192 chat del bot \u2192 \u00b7\u00b7\u00b7 \u2192 M\u00e1s \u2192 *Exportar chat* \u2192 Sin archivos",
+        menu_text(len(s['items']), len(s['active_cats'])),
+        reply_markup=menu_keyboard(s['items'], s['active_cats']),
         parse_mode='Markdown'
     )
+
+
+async def cmd_menu(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+    uid = update.effective_user.id
+    if uid not in SESSIONS:
+        await update.message.reply_text(
+            "No hay ninguna sesión activa. ¿Ya enviaste el archivo `.txt`? "
+            "Si no, usá /start para empezar.",
+            parse_mode='Markdown'
+        )
+        return
+    s = SESSIONS[uid]
+    await update.message.reply_text(
+        menu_text(len(s['items']), len(s['active_cats'])),
+        reply_markup=menu_keyboard(s['items'], s['active_cats']),
+        parse_mode='Markdown'
+    )
+
 
 async def handle_document(update: Update, ctx: ContextTypes.DEFAULT_TYPE):
     doc = update.message.document
@@ -732,6 +853,7 @@ def main():
         log.warning('ANTHROPIC_API_KEY no encontrada.')
     app = Application.builder().token(token).build()
     app.add_handler(CommandHandler('start', cmd_start))
+    app.add_handler(CommandHandler('menu', cmd_menu))
     app.add_handler(MessageHandler(filters.Document.ALL, handle_document))
     app.add_handler(CallbackQueryHandler(handle_callback))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
