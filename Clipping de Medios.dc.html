@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;padding:0;height:100%;}
+  body{background:#eef1f2;}
+  *{box-sizing:border-box;}
+  ::-webkit-scrollbar{width:10px;height:10px;}
+  ::-webkit-scrollbar-thumb{background:#cdd6da;border-radius:6px;border:2px solid #eef1f2;}
+  ::-webkit-scrollbar-thumb:hover{background:#b6c2c7;}
+  @keyframes cm-spin{to{transform:rotate(360deg);}}
+  @keyframes cm-fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+  @keyframes cm-slide{from{transform:translateX(100%);}to{transform:none;}}
+</style>
+</helmet>
+
+<div style="height:100vh;display:flex;flex-direction:column;font-family:'IBM Plex Sans',system-ui,sans-serif;color:#16242c;background:#eef1f2;overflow:hidden;">
+
+  <header style="flex:none;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;background:#0a4f5c;color:#fff;box-shadow:0 1px 0 rgba(0,0,0,0.08);z-index:5;">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <div style="width:34px;height:34px;border-radius:8px;background:#12a3b8;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;letter-spacing:-0.5px;color:#063038;">CM</div>
+      <div style="display:flex;flex-direction:column;line-height:1.15;">
+        <span style="font-size:16px;font-weight:600;letter-spacing:-0.2px;">Clipping de Medios</span>
+        <span style="font-size:11.5px;font-weight:500;color:#9fd0d8;letter-spacing:0.3px;text-transform:uppercase;">Municipalidad de Córdoba</span>
+      </div>
+    </div>
+    <sc-if value="{{ isWorkspace }}">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#bfe0e6;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ fileName }}</span>
+        <button onClick="{{ onReset }}" style="font-family:inherit;font-size:13px;font-weight:500;color:#fff;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.22);padding:7px 14px;border-radius:7px;cursor:pointer;" style-hover="background:rgba(255,255,255,0.2);">Cargar otro archivo</button>
+      </div>
+    </sc-if>
+  </header>
+
+  <!-- ───────── UPLOAD SCREEN ───────── -->
+  <sc-if value="{{ isUpload }}" hint-placeholder-val="{{ true }}">
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:40px;overflow:auto;">
+      <div style="width:100%;max-width:560px;">
+        <div style="text-align:center;margin-bottom:28px;">
+          <h1 style="margin:0 0 10px;font-size:27px;font-weight:600;letter-spacing:-0.5px;">Generá el resumen de prensa</h1>
+          <p style="margin:0;font-size:15px;color:#5e7079;line-height:1.5;">Subí el chat <b style="color:#16242c;">.txt</b> exportado de WhatsApp. El sistema detecta los recortes, los clasifica por categoría y arma el texto listo para copiar.</p>
+        </div>
+
+        <label for="cm-file" ondrop="{{ onDrop }}" ondragover="{{ onDragOver }}" ondragleave="{{ onDragLeave }}" style="display:block;border:2px dashed {{ dropBorder }};background:{{ dropBg }};border-radius:14px;padding:46px 30px;text-align:center;cursor:pointer;transition:background 0.15s,border-color 0.15s;">
+          <div style="width:56px;height:56px;margin:0 auto 16px;border-radius:50%;background:#e7f4f6;display:flex;align-items:center;justify-content:center;">
+            <div style="width:14px;height:14px;border-top:3px solid #0a7d8c;border-right:3px solid #0a7d8c;transform:rotate(-45deg) translateY(2px);"></div>
+          </div>
+          <div style="font-size:16px;font-weight:600;margin-bottom:5px;">Arrastrá el archivo acá</div>
+          <div style="font-size:13.5px;color:#5e7079;">o <span style="color:#0a7d8c;font-weight:600;text-decoration:underline;">elegilo desde tu equipo</span> · solo .txt</div>
+          <input id="cm-file" type="file" accept=".txt,text/plain" onChange="{{ onInputChange }}" style="display:none;">
+        </label>
+
+        <sc-if value="{{ fileError }}">
+          <div style="margin-top:14px;padding:12px 16px;background:#fdeceb;border:1px solid #f3c9c6;border-radius:9px;color:#a3322c;font-size:13.5px;display:flex;gap:9px;align-items:flex-start;">
+            <span style="font-weight:700;">!</span><span>{{ fileError }}</span>
+          </div>
+        </sc-if>
+
+        <div style="margin-top:28px;padding:18px 20px;background:#fff;border:1px solid #e4e8eb;border-radius:11px;">
+          <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.6px;color:#8a9aa1;margin-bottom:10px;">Cómo exportar el chat</div>
+          <div style="font-size:13.5px;color:#41525b;line-height:1.7;font-family:'IBM Plex Mono',monospace;">WhatsApp → chat del bot → ⋮ Más → <b style="color:#16242c;">Exportar chat</b> → Sin archivos</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ───────── WORKSPACE ───────── -->
+  <sc-if value="{{ isWorkspace }}">
+    <div style="flex:1;display:flex;min-height:0;">
+
+      <!-- Sidebar -->
+      <aside style="flex:none;width:286px;background:#fff;border-right:1px solid #e4e8eb;display:flex;flex-direction:column;min-height:0;">
+        <div style="flex:none;padding:18px 20px 12px;">
+          <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.6px;color:#8a9aa1;">Categorías</div>
+          <div style="margin-top:4px;font-size:13px;color:#5e7079;">{{ totalItems }} recortes · {{ totalCats }} categorías</div>
+        </div>
+        <div style="flex:1;overflow-y:auto;padding:0 12px 16px;">
+          <sc-for list="{{ cats }}" as="cat" hint-placeholder-count="6">
+            <button onClick="{{ cat.onSelect }}" style="{{ cat.rowStyle }}" style-hover="background:#f1f5f6;">
+              <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ cat.display }}</span>
+              <span style="{{ cat.countStyle }}">{{ cat.count }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </aside>
+
+      <!-- Main -->
+      <main style="flex:1;display:flex;flex-direction:column;min-width:0;min-height:0;">
+        <div style="flex:none;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 26px;background:#fff;border-bottom:1px solid #e4e8eb;">
+          <div style="min-width:0;">
+            <h2 style="margin:0;font-size:19px;font-weight:600;letter-spacing:-0.3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ activeLabel }}</h2>
+            <div style="margin-top:2px;font-size:13px;color:#5e7079;">{{ filteredCount }} recortes</div>
+          </div>
+          <div style="flex:none;display:flex;align-items:center;gap:10px;">
+            <sc-if value="{{ aiRunning }}">
+              <span style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0a7d8c;font-weight:500;">
+                <span style="width:14px;height:14px;border:2px solid #bfe0e6;border-top-color:#0a7d8c;border-radius:50%;display:inline-block;animation:cm-spin 0.7s linear infinite;"></span>
+                Generando títulos {{ aiProgress }}
+              </span>
+            </sc-if>
+            <sc-if value="{{ aiIdle }}">
+              <button onClick="{{ onGenerateAI }}" style="font-family:inherit;font-size:13.5px;font-weight:500;color:#0a5560;background:#e7f4f6;border:1px solid #bfe0e6;padding:9px 16px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:7px;" style-hover="background:#d9eef1;">✦ Títulos con IA</button>
+            </sc-if>
+            <button onClick="{{ onGenerate }}" style="font-family:inherit;font-size:13.5px;font-weight:600;color:#fff;background:#0a7d8c;border:none;padding:10px 18px;border-radius:8px;cursor:pointer;box-shadow:0 1px 2px rgba(10,79,92,0.25);" style-hover="background:#086a77;">Generar resumen</button>
+          </div>
+        </div>
+
+        <div style="flex:1;overflow-y:auto;padding:22px 26px 40px;">
+          <sc-if value="{{ hasClips }}">
+            <div style="display:flex;flex-direction:column;gap:12px;max-width:880px;">
+              <sc-for list="{{ clips }}" as="clip" hint-placeholder-count="5">
+                <article style="background:#fff;border:1px solid #e4e8eb;border-radius:11px;padding:{{ cardPad }};">
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:9px;">
+                    <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:500;color:#0a7d8c;background:#eef6f7;padding:3px 9px;border-radius:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60%;">{{ clip.source }}</span>
+                    <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#8a9aa1;flex:none;">{{ clip.when }}</span>
+                  </div>
+                  <h3 style="margin:0;font-size:16px;font-weight:600;line-height:1.35;letter-spacing:-0.2px;color:#16242c;text-wrap:pretty;">{{ clip.displayTitle }}</h3>
+                  <p style="margin:7px 0 0;font-size:13.5px;line-height:1.55;color:#5e7079;display:{{ descDisplay }};text-wrap:pretty;">{{ clip.descShort }}</p>
+                  <div style="display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-top:12px;">
+                    <sc-for list="{{ clip.tags }}" as="tag" hint-placeholder-count="1">
+                      <span style="font-size:11.5px;font-weight:500;color:#41525b;background:#f1f5f6;border:1px solid #e4e8eb;padding:3px 9px;border-radius:20px;">{{ tag }}</span>
+                    </sc-for>
+                    <sc-if value="{{ clip.url }}">
+                      <a href="{{ clip.url }}" target="_blank" rel="noopener" style="margin-left:auto;font-size:12.5px;color:#0a7d8c;font-family:'IBM Plex Mono',monospace;text-decoration:none;display:flex;align-items:center;gap:5px;" style-hover="text-decoration:underline;">🔗 {{ clip.host }}</a>
+                    </sc-if>
+                  </div>
+                </article>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ noClips }}">
+            <div style="text-align:center;padding:80px 20px;color:#8a9aa1;font-size:14px;">No hay recortes en esta categoría.</div>
+          </sc-if>
+        </div>
+      </main>
+    </div>
+  </sc-if>
+
+  <!-- ───────── SUMMARY SLIDE-OVER ───────── -->
+  <sc-if value="{{ summaryOpen }}">
+    <div onClick="{{ onCloseSummary }}" style="position:fixed;inset:0;background:rgba(15,30,35,0.4);z-index:20;animation:cm-fade 0.2s ease both;"></div>
+    <div style="position:fixed;top:0;right:0;bottom:0;width:560px;max-width:92vw;background:#fff;z-index:21;display:flex;flex-direction:column;box-shadow:-8px 0 30px rgba(0,0,0,0.16);animation:cm-slide 0.28s cubic-bezier(0.22,1,0.36,1) both;">
+      <div style="flex:none;display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid #e4e8eb;">
+        <div>
+          <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.6px;color:#8a9aa1;">Resumen listo</div>
+          <div style="font-size:16px;font-weight:600;margin-top:2px;">{{ activeLabel }} · {{ filteredCount }} recortes</div>
+        </div>
+        <button onClick="{{ onCloseSummary }}" style="font-family:inherit;width:32px;height:32px;border-radius:7px;border:1px solid #e4e8eb;background:#fff;cursor:pointer;font-size:17px;color:#5e7079;line-height:1;" style-hover="background:#f1f5f6;">✕</button>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:20px 22px;background:#f7f9f9;">
+        <pre style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.65;color:#26343c;white-space:pre-wrap;word-break:break-word;">{{ summaryText }}</pre>
+      </div>
+      <div style="flex:none;padding:16px 22px;border-top:1px solid #e4e8eb;display:flex;gap:10px;">
+        <button onClick="{{ onCopy }}" style="flex:1;font-family:inherit;font-size:14px;font-weight:600;color:#fff;background:{{ copyBg }};border:none;padding:12px;border-radius:9px;cursor:pointer;transition:background 0.15s;">{{ copyLabel }}</button>
+        <button onClick="{{ onCloseSummary }}" style="font-family:inherit;font-size:14px;font-weight:500;color:#41525b;background:#fff;border:1px solid #e4e8eb;padding:12px 20px;border-radius:9px;cursor:pointer;" style-hover="background:#f1f5f6;">Cerrar</button>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;},&quot;density&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Cómoda&quot;,&quot;Compacta&quot;],&quot;default&quot;:&quot;Cómoda&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;showDescriptions&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  state = {
+    ready: false,
+    screen: 'upload',
+    items: [],
+    activeCat: '__all__',
+    fileName: '',
+    fileError: '',
+    dragging: false,
+    summaryOpen: false,
+    summaryText: '',
+    copied: false,
+    aiRunning: false,
+    aiDone: 0,
+    aiTotal: 0,
+  };
+
+  async componentDidMount() {
+    try {
+      const mod = await import(new URL('./clipping.js', location.href).href);
+      this.lib = mod;
+      this.setState({ ready: true });
+    } catch (e) {
+      if (window.Clipping) { this.lib = window.Clipping; this.setState({ ready: true }); }
+      else console.error('No se pudo cargar clipping.js', e);
+    }
+  }
+
+  readFile(file) {
+    if (!file) return;
+    if (!file.name.toLowerCase().endsWith('.txt')) {
+      this.setState({ fileError: 'Subí un archivo .txt exportado de WhatsApp.' });
+      return;
+    }
+    if (!this.lib) { this.setState({ fileError: 'Cargando el motor… probá de nuevo en un segundo.' }); return; }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const items = this.lib.build_items(String(e.target.result || ''));
+        if (!items.length) {
+          this.setState({ fileError: 'No encontré recortes. Verificá que sea un chat con Media Monitoring o CVAMedios.' });
+          return;
+        }
+        this.setState({ items, screen: 'workspace', activeCat: '__all__', fileName: file.name, fileError: '', summaryOpen: false });
+      } catch (err) {
+        this.setState({ fileError: 'Error al procesar el archivo: ' + err.message });
+      }
+    };
+    reader.onerror = () => this.setState({ fileError: 'No se pudo leer el archivo.' });
+    reader.readAsText(file, 'utf-8');
+  }
+
+  onInputChange(e) { this.readFile(e.target.files[0]); e.target.value = ''; }
+  onDrop(e) { e.preventDefault(); this.setState({ dragging: false }); this.readFile(e.dataTransfer.files[0]); }
+  onDragOver(e) { e.preventDefault(); if (!this.state.dragging) this.setState({ dragging: true }); }
+  onDragLeave(e) { e.preventDefault(); this.setState({ dragging: false }); }
+
+  filtered() {
+    const { items, activeCat } = this.state;
+    return activeCat === '__all__' ? items : items.filter(n => n.cats.includes(activeCat));
+  }
+
+  label() { return this.state.activeCat === '__all__' ? 'Todas las noticias' : this.state.activeCat; }
+  catKey() { return this.state.activeCat === '__all__' ? 'NOTICIAS' : this.state.activeCat; }
+
+  selectCat(name) { this.setState({ activeCat: name }); }
+
+  openSummary() {
+    const txt = this.lib.format_message(this.filtered(), this.catKey());
+    this.setState({ summaryText: txt, summaryOpen: true, copied: false });
+  }
+  closeSummary() { this.setState({ summaryOpen: false }); }
+
+  copy() {
+    navigator.clipboard.writeText(this.state.summaryText).then(() => {
+      this.setState({ copied: true });
+      clearTimeout(this._cp);
+      this._cp = setTimeout(() => this.setState({ copied: false }), 1800);
+    }).catch(() => {});
+  }
+
+  hostOf(url) { try { return new URL(url).hostname.replace(/^www\./, ''); } catch (e) { return ''; } }
+
+  async aiTitle(item) {
+    const content = item.ia_txt
+      ? `Descripción: ${item.desc}\n\nTranscripción:\n${item.ia_txt.slice(0, 2000)}`
+      : (item.desc || '').slice(0, 2000);
+    if (!content.trim()) return item.url || '(sin título)';
+    const prompt = 'Generá un título periodístico conciso (máximo 10 palabras) para este recorte de medios de Córdoba, Argentina. Respondé SOLO con el título, sin comillas ni explicaciones.\n\n' + content;
+    try {
+      if (!window.claude || !window.claude.complete) throw new Error('sin IA');
+      let out = await window.claude.complete({ messages: [{ role: 'user', content: prompt }] });
+      out = String(out || '').trim().replace(/^["'\u201c]+|["'\u201d]+$/g, '').trim();
+      return out || (item.desc || '').slice(0, 70) || '(sin título)';
+    } catch (e) {
+      return (item.desc || '').slice(0, 70) || '(sin título)';
+    }
+  }
+
+  async generateAI() {
+    if (this.state.aiRunning) return;
+    const todo = this.filtered().filter(n => !n.title);
+    if (!todo.length) { this.openSummary(); return; }
+    this.setState({ aiRunning: true, aiDone: 0, aiTotal: todo.length });
+    for (let i = 0; i < todo.length; i++) {
+      todo[i].title = await this.aiTitle(todo[i]);
+      this.setState({ aiDone: i + 1 });
+    }
+    this.setState({ aiRunning: false });
+    this.openSummary();
+  }
+
+  renderVals() {
+    const s = this.state;
+    const compact = this.props.density === 'Compacta';
+    const showDesc = this.props.showDescriptions !== false;
+
+    const counts = {};
+    for (const n of s.items) for (const c of n.cats) counts[c] = (counts[c] || 0) + 1;
+    const CATS = (this.lib && this.lib.CATS) || [];
+    const activeList = CATS.filter(c => counts[c]);
+
+    const mkRow = (active) => ({
+      width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      gap: '10px', padding: '9px 12px 9px 14px', marginBottom: '2px', border: 'none',
+      borderRadius: '8px', cursor: 'pointer', textAlign: 'left', fontFamily: 'inherit',
+      fontSize: '14px',
+      background: active ? '#e7f4f6' : 'transparent',
+      color: active ? '#0a5560' : '#41525b',
+      fontWeight: active ? 600 : 500,
+      boxShadow: active ? 'inset 3px 0 0 #12a3b8' : 'none',
+    });
+    const mkCount = (active) => ({
+      flex: 'none', fontFamily: "'IBM Plex Mono',monospace", fontSize: '12px',
+      fontVariantNumeric: 'tabular-nums',
+      color: active ? '#0a7d8c' : '#9aa8ae',
+      background: active ? '#d4ecef' : '#f1f5f6',
+      padding: '1px 8px', borderRadius: '20px', minWidth: '26px', textAlign: 'center',
+    });
+
+    const cats = [{ name: '__all__', display: 'Todas', count: s.items.length }]
+      .concat(activeList.map(c => ({ name: c, display: c, count: counts[c] })))
+      .map(c => {
+        const active = c.name === s.activeCat;
+        return { ...c, rowStyle: mkRow(active), countStyle: mkCount(active), onSelect: () => this.selectCat(c.name) };
+      });
+
+    const f = this.filtered();
+    const clips = f.map(n => {
+      const desc = (n.desc || '').replace(/\s+/g, ' ').trim();
+      return {
+        displayTitle: n.title || desc.slice(0, 90) || '(sin título)',
+        descShort: desc.length > 230 ? desc.slice(0, 230) + '…' : desc,
+        source: [n.medio, n.programa].filter(Boolean).join('  ·  ') || 'Sin fuente',
+        when: `${n.date}   ${n.time}`,
+        url: n.url || '', host: n.url ? this.hostOf(n.url) : '',
+        tags: n.cats,
+      };
+    });
+
+    return {
+      ready: s.ready,
+      isUpload: s.screen === 'upload',
+      isWorkspace: s.screen === 'workspace',
+      fileName: s.fileName,
+      fileError: s.fileError,
+      dropBorder: s.dragging ? '#0a7d8c' : '#cdd6da',
+      dropBg: s.dragging ? '#e7f4f6' : '#fbfcfc',
+      totalItems: s.items.length,
+      totalCats: activeList.length,
+      cats,
+      clips,
+      cardPad: compact ? '13px 16px' : '18px 20px',
+      descDisplay: (showDesc && !compact) ? 'block' : 'none',
+      activeLabel: this.label(),
+      filteredCount: f.length,
+      hasClips: f.length > 0,
+      noClips: f.length === 0,
+      summaryOpen: s.summaryOpen,
+      summaryText: s.summaryText,
+      copied: s.copied,
+      copyLabel: s.copied ? '✓ Copiado al portapapeles' : 'Copiar texto',
+      copyBg: s.copied ? '#1f8a5b' : '#0a7d8c',
+      aiRunning: s.aiRunning,
+      aiIdle: !s.aiRunning,
+      aiProgress: `${s.aiDone}/${s.aiTotal}`,
+      onInputChange: (e) => this.onInputChange(e),
+      onDrop: (e) => this.onDrop(e),
+      onDragOver: (e) => this.onDragOver(e),
+      onDragLeave: (e) => this.onDragLeave(e),
+      onGenerate: () => this.openSummary(),
+      onGenerateAI: () => this.generateAI(),
+      onCloseSummary: () => this.closeSummary(),
+      onCopy: () => this.copy(),
+      onReset: () => this.setState({ screen: 'upload', fileError: '', dragging: false }),
+    };
+  }
+}
+</script>
+</body>
+</html>
